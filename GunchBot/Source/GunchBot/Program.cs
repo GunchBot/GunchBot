@@ -3,18 +3,20 @@
     using Discord;
     using Discord.Commands;
     using Discord.WebSocket;
-    using GunchBot.Modules;
+    using GunchBot.Contracts;
+    using GunchBot.Core;
+    using GunchBot.StubWeatherModule;
     using Microsoft.Extensions.DependencyInjection;
-    using System.Reflection;
 
     public class Program
     {
         private const string GunchBotKey = "GUNCHBOT_KEY";
-        private const char Prefix = '!';
+        private const string Prefix = "!";
 
-        private DiscordSocketClient _client;
-        private CommandService _commands;
-        private IServiceProvider _services;
+        private DiscordSocketClient client;
+        private CommandService commands;
+        private IWeatherApiIntegration api;
+        private IServiceProvider services;
 
         public static void Main(string[] args) => new Program().RunBotAsync().GetAwaiter().GetResult();
 
@@ -27,36 +29,37 @@
                 {
                     GatewayIntents = GatewayIntents.All // TODO: he don't need all this
                 };
-                _client = new DiscordSocketClient(config);
-                _commands = new CommandService();
-                _services = new ServiceCollection().AddSingleton(_client).AddSingleton(_commands).BuildServiceProvider();
-                _client.Log += ClientLog;
+                client = new DiscordSocketClient(config);
+                commands = new CommandService();
+                api = new StubWeatherApiIntegration();
+                services = new ServiceCollection().AddSingleton(client).AddSingleton(commands).AddSingleton(api).BuildServiceProvider();
+                client.Log += ClientLog;
 
                 await RegisterCommandsAsync();
-                await _client.LoginAsync(TokenType.Bot, token);
-                await _client.StartAsync();
+                await client.LoginAsync(TokenType.Bot, token);
+                await client.StartAsync();
                 await Task.Delay(-1);
             }
         }
 
         private async Task RegisterCommandsAsync()
         {
-            _client.MessageReceived += HandleCommandAsync;
-            await _commands.AddModuleAsync<Commands>(_services);
+            client.MessageReceived += HandleCommandAsync;
+            await commands.AddModuleAsync<WeatherModule>(services);
         }
 
         private async Task HandleCommandAsync(SocketMessage arg)
         {
             var message = arg as SocketUserMessage;
-            var context = new SocketCommandContext(_client, message);
+            var context = new SocketCommandContext(client, message);
             if (message.Author.IsBot) return;
 
             int argPos = 0;
             var content = message.Content;
             var test = message.HasStringPrefix("!", ref argPos, StringComparison.CurrentCulture);
-            if (test || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
+            if (test || message.HasMentionPrefix(client.CurrentUser, ref argPos))
             {
-                var result = await _commands.ExecuteAsync(context, argPos, _services);
+                var result = await commands.ExecuteAsync(context, argPos, services);
                 if(!result.IsSuccess) Console.WriteLine(result.ErrorReason);
             }
         }
