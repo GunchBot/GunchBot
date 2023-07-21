@@ -1,14 +1,29 @@
-﻿namespace GunchBot.StubWeatherModule
+﻿namespace GunchBot.WeatherService.Stub
 {
     using GunchBot.Contracts;
 
-    public class StubWeatherApiIntegration : IWeatherApiIntegration
+    /// <summary>
+    /// A basic integration of the weather service to serve as a test bed.
+    /// </summary>
+    public class StubWeatherApiIntegration : IWeatherService
     {
-        private Random random = new Random();
+        private readonly ILocationService locationService;
 
+        /// <summary>
+        /// Creates an instance of <see cref="StubWeatherApiIntegration"/>.
+        /// </summary>
+        /// <param name="locationService">The <see cref="ILocationService"/> that handles converting user specified location into latitude/longitude coordinates.</param>
+        public StubWeatherApiIntegration(ILocationService locationService)
+        {
+            this.locationService = locationService;
+        }
+
+        /// <inheritdoc/>
         public string CurrentWeather(string location, char unit)
         {
-            return $"It is currently {random.Next() % 120}°{unit} in {location}.\n(this is fake)";
+            var coordinates = locationService.Geocode(location);
+
+            return $"It is currently fake°{unit} in {location} ({coordinates.latitude}, {coordinates.longitude}).";
         }
     }
 }
