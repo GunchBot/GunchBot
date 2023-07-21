@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GunchBot.Bot", "Source\GunchBot\GunchBot.Bot.csproj", "{31045C83-A337-4DDF-8B28-D9ACA4C42F7A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GunchBot.Core", "Source\GunchBot.WeatherModule.Core\GunchBot.Core.csproj", "{88C15DA7-02F1-43B9-9783-72ECBE98DEF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GunchBot.Utilities", "Source\GunchBot.WeatherModule.Core\GunchBot.Utilities.csproj", "{88C15DA7-02F1-43B9-9783-72ECBE98DEF9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GunchBot.Contracts", "Source\GunchBot.WeatherModule.Contracts\GunchBot.Contracts.csproj", "{FB561B56-C6F0-4B71-8481-73C6BFB1B7F8}"
 EndProject

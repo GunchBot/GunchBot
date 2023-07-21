@@ -19,11 +19,8 @@ namespace GunchBot.LocationService.BingMaps
         }
 
         /// <inheritdoc/>
-        public (double latitude, double longitude) Geocode(string location)
+        public Coordinates Geocode(string location)
         {
-            var latitude = 0.0;
-            var longitude = 0.0;
-
             if(apiKey != null)
             {
                 var geocodeRequest = new GeocodeRequest
@@ -35,15 +32,18 @@ namespace GunchBot.LocationService.BingMaps
                 var locationResource = GetResourcesFromRequest(geocodeRequest).FirstOrDefault() as Location;
                 if(locationResource != null)
                 {
-                    latitude = locationResource.Point.Coordinates[0];
-                    longitude = locationResource.Point.Coordinates[1];
+                    return new Coordinates
+                    {
+                        Latitude = locationResource.Point.Coordinates[0],
+                        Longitude = locationResource.Point.Coordinates[1],
+                    };
                 }
             }
 
             //TODO since technically 0,0 is a valid and real location,
             //we need to make a coordinate class and have some coordinate.invalid value
             //for the case where the lookup fails.
-            return (latitude, longitude);
+            return Coordinates.Invalid;
         }
 
 

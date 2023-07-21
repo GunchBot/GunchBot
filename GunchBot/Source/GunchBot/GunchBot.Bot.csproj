@@ -15,7 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GunchBot.LocationService.BingMaps\GunchBot.LocationService.BingMaps.csproj" />
     <ProjectReference Include="..\GunchBot.StubWeatherModule\GunchBot.WeatherService.Stub.csproj" />
-    <ProjectReference Include="..\GunchBot.WeatherModule.Core\GunchBot.Core.csproj" />
+    <ProjectReference Include="..\GunchBot.WeatherModule.Core\GunchBot.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

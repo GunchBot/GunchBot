@@ -1,6 +1,7 @@
 ﻿namespace GunchBot.WeatherService.Stub
 {
     using GunchBot.Contracts;
+    using GunchBot.Utilities;
 
     /// <summary>
     /// A basic integration of the weather service to serve as a test bed.
@@ -23,7 +24,12 @@
         {
             var coordinates = locationService.Geocode(location);
 
-            return $"It is currently fake°{unit} in {location} ({coordinates.latitude}, {coordinates.longitude}).";
+            if (coordinates.IsInvalid())
+            {
+                return "Location invalid, please try again.";
+            }
+
+            return $"It is currently fake°{unit} in {location} ({coordinates.Latitude}, {coordinates.Longitude}).";
         }
     }
 }

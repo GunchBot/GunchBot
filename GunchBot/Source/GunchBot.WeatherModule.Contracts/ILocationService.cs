@@ -10,6 +10,6 @@
         /// </summary>
         /// <param name="location">The name of the location.This can be formatted in most user-readable names. e.g. "35806", or "Huntsville, Alabama", or even "University of Alabama Huntsville".</param>
         /// <returns>The latitude and longitude in degrees.</returns>
-        (double latitude, double longitude) Geocode(string location);
+        Coordinates Geocode(string location);
     }
 }
