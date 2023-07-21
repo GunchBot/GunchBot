@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GunchBot.WeatherModule.Contracts\GunchBot.Contracts.csproj" />
-    <ProjectReference Include="..\GunchBot.WeatherModule.Core\GunchBot.Utilities.csproj" />
+    <ProjectReference Include="..\GunchBot.Contracts\GunchBot.Contracts.csproj" />
+    <ProjectReference Include="..\GunchBot.Utilities\GunchBot.Utilities.csproj" />
   </ItemGroup>
 
 </Project>
