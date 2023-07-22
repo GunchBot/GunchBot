@@ -16,7 +16,8 @@ namespace GunchBot.WeatherService.Nws
             var periods = forecast.Properties.Periods.ToList();
 
             var firstEntry = periods.FirstOrDefault(); // should never be null. If it is, the exception gets caught elsewhere.
-            if (!firstEntry.IsDaytime)
+            var secondEntry = periods.ElementAt(1);
+            if (firstEntry?.StartTime.DayOfWeek != secondEntry.StartTime.DayOfWeek)
             {
                 output +=
                     $"{firstEntry.Name}\n\t⬇️ Lows around {firstEntry.Temperature}°{firstEntry.TemperatureUnit}." +
@@ -27,10 +28,10 @@ namespace GunchBot.WeatherService.Nws
                 days--;
             }
 
-            for (int i = 0; i < days && i * 2 + 1 < forecast.Properties.Periods.Count; i++) // this logic is a mess
+            for (int i = 0; i < days && i * 2 + 1 < periods.Count; i++) // this logic is a mess
             {
-                var day = forecast.Properties.Periods[i * 2];
-                var evening = forecast.Properties.Periods[i * 2 + 1];
+                var day = periods[i * 2];
+                var evening = periods[i * 2 + 1];
                 var date = day.StartTime.ToString("dd MMMM");
                 output +=
                     $"{day.Name} ({date}):" +
