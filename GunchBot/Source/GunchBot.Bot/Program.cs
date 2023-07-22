@@ -38,7 +38,7 @@ namespace GunchBot.Bot
             {
                 var config = new DiscordSocketConfig()
                 {
-                    GatewayIntents = GatewayIntents.All // TODO: he don't need all this
+                    GatewayIntents = GatewayIntents.All // TODO: he don't need all this. Issue ID: GUN-6
                     // Send messages, read messages, send emojis, create slash commands...
                     // once the bot is closer to done I'll make a point to cull the
                     // permissions down to what he needs.

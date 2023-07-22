@@ -45,7 +45,7 @@ namespace GunchBot.WeatherService.Nws
         private static string GetFormattedShortForecast(Period period)
         {
             return $"{GetEmojiFromForecast(period.ShortForecast, period.IsDaytime)} {period.ShortForecast}.{(period.ProbabilityOfPrecipitation.Value.HasValue ? $" ({period.ProbabilityOfPrecipitation.Value}%)." : "")}" +
-                $" Winds {period.WindDirection} at {period.WindSpeed}."; // TODO: need to see what happens if there's... no winds?
+                $" Winds {period.WindDirection} at {period.WindSpeed}.";
         }
 
         private static string GetEmojiFromForecast(string shortForecast, bool daytime)
