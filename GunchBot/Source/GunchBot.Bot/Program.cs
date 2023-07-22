@@ -4,12 +4,15 @@ namespace GunchBot.Bot
 {
     using Discord;
     using Discord.Commands;
+    using Discord.Net;
     using Discord.WebSocket;
     using GunchBot.Bot.Modules;
     using GunchBot.Contracts;
     using GunchBot.LocationService.BingMaps;
     using GunchBot.WeatherService.Stub;
     using Microsoft.Extensions.DependencyInjection;
+    using Newtonsoft.Json;
+    using Riff.Nws.Net;
 
     public class Program
     {
@@ -20,8 +23,9 @@ namespace GunchBot.Bot
         private DiscordSocketClient client;
         private CommandService commands;
         private ILocationService locationService;
-        private IWeatherService weatherApi;
+        private IWeatherService weatherService;
         private IServiceProvider services;
+        private SlashCommandManager slashCommandManager;
 
         public static void Main(string[] args) => new Program().RunBotAsync().GetAwaiter().GetResult();
 
@@ -35,13 +39,17 @@ namespace GunchBot.Bot
                 var config = new DiscordSocketConfig()
                 {
                     GatewayIntents = GatewayIntents.All // TODO: he don't need all this
+                    // Send messages, read messages, send emojis, create slash commands...
+                    // once the bot is closer to done I'll make a point to cull the
+                    // permissions down to what he needs.
                 };
 
                 client = new DiscordSocketClient(config);
                 commands = new CommandService();
                 locationService = new BingMapsLocationService(bingMapsApiKey);
-                weatherApi = new NwsWeatherService(locationService);
-                services = new ServiceCollection().AddSingleton(client).AddSingleton(commands).AddSingleton(weatherApi).BuildServiceProvider();
+                weatherService = new NwsWeatherService(locationService);
+                slashCommandManager = new SlashCommandManager(client, weatherService);
+                services = new ServiceCollection().AddSingleton(client).AddSingleton(commands).AddSingleton(weatherService).BuildServiceProvider();
                 client.Log += ClientLog;
 
                 await RegisterCommandsAsync();

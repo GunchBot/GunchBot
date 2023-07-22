@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using GunchBot.Contracts;
 using GunchBot.Utilities;
+using Riff.Nws.Net.Metadata;
 
 namespace GunchBot.WeatherService.Nws
 {
@@ -45,17 +46,8 @@ namespace GunchBot.WeatherService.Nws
                     return "Something went wrong with the NWS request. Try again later.";
 
                 var output = $"Forecast for {gridpoint.Properties.RelativeLocation.Properties.City}, {gridpoint.Properties.RelativeLocation.Properties.State}:\n\n";
+                output += GetFormattedForecast(forecast, days);
                 
-                //TODO: Move forecast formatting to its own class. Maybe extension methods?
-                //The formatting is intended to be discord specific so it might go into... GunchBot.Utilities?
-                for (int i = 0; i < days && i < forecast.Properties.Periods.Count; i++)
-                {
-                    var day = forecast.Properties.Periods[i];
-                    output += $"{day.Name}\n\t{(day.IsDaytime ? "⬆️ Highs" : "⬇️ Lows")} around {day.Temperature}°{day.TemperatureUnit}." +
-                              $"\n\t💨 Winds {day.WindDirection} at {day.WindSpeed}." + // TODO: need to see what happens if there's... no winds?
-                              $"\n\t{GetEmojiFromForecast(day.ShortForecast, day.IsDaytime)} {day.ShortForecast} {(day.ProbabilityOfPrecipitation.Value.HasValue ? $"({day.ProbabilityOfPrecipitation.Value}%)." : "")}\n\n";
-                }
-
                 return output;
             }
             catch (Exception ex)
@@ -67,6 +59,47 @@ namespace GunchBot.WeatherService.Nws
                 }
                 return "Something went wrong with the NWS request. Try again later.";
             }
+        }
+
+        //TODO: Move forecast formatting to its own class. Maybe extension methods?
+        //The formatting is intended to be discord specific so it might go into... GunchBot.Utilities?
+        private static string GetFormattedForecast(Forecast forecast, int days)
+        {
+            var output = string.Empty;
+
+            var periods = forecast.Properties.Periods.ToList();
+
+            var firstEntry = periods.FirstOrDefault(); // should never be null. If it is, the exception gets caught elsewhere.
+            if (!firstEntry.IsDaytime)
+            {
+                output +=
+                    $"{firstEntry.Name}\n\t⬇️ Lows around {firstEntry.Temperature}°{firstEntry.TemperatureUnit}." +
+                    $"\n\t{GetEmojiFromForecast(firstEntry.ShortForecast, firstEntry.IsDaytime)} {firstEntry.ShortForecast}.{(firstEntry.ProbabilityOfPrecipitation.Value.HasValue ? $" ({firstEntry.ProbabilityOfPrecipitation.Value}%)." : "")}" +
+                    $" Winds {firstEntry.WindDirection} at {firstEntry.WindSpeed}." + // TODO: need to see what happens if there's... no winds?
+                    $"\n\n";
+
+                periods.Remove(firstEntry);
+                days--;
+            }
+
+            for (int i = 0; i < days && i * 2 + 1< forecast.Properties.Periods.Count; i++) // this logic is a mess
+            {
+                var day = forecast.Properties.Periods[i * 2];
+                var evening = forecast.Properties.Periods[i * 2 + 1];
+                var date = day.StartTime.ToString("dd MMMM");
+                output += 
+                    $"{day.Name} ({date}):" +
+                    $"\n\t⬆️ High: {day.Temperature}°{day.TemperatureUnit}, ⬇️ Low: {evening.Temperature}°{evening.TemperatureUnit}." +
+                    $"\n\tDuring the day:" +
+                    $"\n\t\t{GetEmojiFromForecast(day.ShortForecast, day.IsDaytime)} {day.ShortForecast}.{(day.ProbabilityOfPrecipitation.Value.HasValue ? $" ({day.ProbabilityOfPrecipitation.Value}%)." : "")}" +
+                    $" Winds {day.WindDirection} at {day.WindSpeed}." + // TODO: need to see what happens if there's... no winds?
+                    $"\n\tAt night:" +
+                    $"\n\t\t{GetEmojiFromForecast(evening.ShortForecast, evening.IsDaytime)} {evening.ShortForecast}.{(evening.ProbabilityOfPrecipitation.Value.HasValue ? $" ({evening.ProbabilityOfPrecipitation.Value}%)." : "")}" +
+                    $" Winds {evening.WindDirection} at {evening.WindSpeed}." + // TODO: need to see what happens if there's... no winds?
+                    $"\n\n";
+            }
+
+            return output;
         }
 
         private static string GetEmojiFromForecast(string shortForecast, bool daytime)
