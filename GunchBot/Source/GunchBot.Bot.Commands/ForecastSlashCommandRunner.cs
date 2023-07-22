@@ -1,10 +1,9 @@
 ﻿using Discord;
-using Discord.WebSocket;
 using GunchBot.Contracts;
 
-namespace GunchBot.Bot
+namespace GunchBot.Bot.Commands
 {
-    internal class ForecastSlashCommandRunner : ISlashCommandRunner
+    public class ForecastSlashCommandRunner : ISlashCommandRunner
     {
         private const string name = "forecast";
         private const string description = "Gets the forecast for the specified area.";
@@ -39,7 +38,7 @@ namespace GunchBot.Bot
 
 
         /// <inheritdoc/>
-        public async Task RunCommand(SocketSlashCommand slashCommand)
+        public async Task RunCommand(ISlashCommandInteraction slashCommand)
         {
             int defaultDays = 3;
             var locationOption = slashCommand.Data.Options.FirstOrDefault(o => o.Name == "location");

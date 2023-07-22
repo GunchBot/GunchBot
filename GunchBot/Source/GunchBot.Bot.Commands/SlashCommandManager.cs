@@ -1,15 +1,14 @@
-﻿using Discord;
-using Discord.Net;
+﻿using Discord.Net;
 using Discord.WebSocket;
 using GunchBot.Contracts;
 using Newtonsoft.Json;
 
-namespace GunchBot.Bot
+namespace GunchBot.Bot.Commands
 {
     /// <summary>
     /// Handles creating and running slash commands.
     /// </summary>
-    internal class SlashCommandManager
+    public class SlashCommandManager
     {
         private readonly DiscordSocketClient client;
         private readonly IWeatherService weatherService;
@@ -23,8 +22,9 @@ namespace GunchBot.Bot
         /// <remarks>
         /// Not a huge fan of this structure but for now it works.
         /// TODO: Dependency Injection? Issue ID: GUN-17
+        /// TODO: Decouple this from DiscordSocketClient
         /// </remarks>
-        internal SlashCommandManager(DiscordSocketClient client, IWeatherService weatherService)
+        public SlashCommandManager(DiscordSocketClient client, IWeatherService weatherService)
         {
             this.weatherService = weatherService ?? throw new ArgumentNullException(nameof(weatherService));
             this.client = client ?? throw new ArgumentNullException(nameof(client));
@@ -34,7 +34,10 @@ namespace GunchBot.Bot
             this.client.SlashCommandExecuted += HandleCommands;
         }
 
-        internal async Task CreateCommands()
+        /// <summary>
+        /// Create and register commands.
+        /// </summary>
+        public async Task CreateCommands()
         {
             commands.Add(new ForecastSlashCommandRunner(weatherService));
             try

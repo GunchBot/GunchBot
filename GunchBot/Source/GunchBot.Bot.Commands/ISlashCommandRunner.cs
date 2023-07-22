@@ -1,9 +1,9 @@
 ﻿using Discord;
 using Discord.WebSocket;
 
-namespace GunchBot.Bot
+namespace GunchBot.Bot.Commands
 {
-    internal interface ISlashCommandRunner
+    public interface ISlashCommandRunner
     {
         /// <summary>
         /// The name to reference the command.
@@ -21,6 +21,6 @@ namespace GunchBot.Bot
         /// <returns>A built <see cref="ApplicationCommandProperties"/>.</returns>
         ApplicationCommandProperties Build();
 
-        Task RunCommand(SocketSlashCommand slashCommand);
+        Task RunCommand(ISlashCommandInteraction slashCommand);
     }
 }

@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GunchBot.Bot.Commands\GunchBot.Bot.Commands.csproj" />
     <ProjectReference Include="..\GunchBot.LocationService.BingMaps\GunchBot.LocationService.BingMaps.csproj" />
     <ProjectReference Include="..\GunchBot.WeatherService.Nws\GunchBot.WeatherService.Nws.csproj" />
     <ProjectReference Include="..\GunchBot.WeatherService.Stub\GunchBot.WeatherService.Stub.csproj" />

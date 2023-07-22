@@ -1,15 +1,14 @@
-﻿using GunchBot.WeatherService.Nws;
-
-namespace GunchBot.Bot
+﻿namespace GunchBot.Bot
 {
     using Discord;
     using Discord.Commands;
     using Discord.Net;
     using Discord.WebSocket;
+    using GunchBot.Bot.Commands;
     using GunchBot.Bot.Modules;
     using GunchBot.Contracts;
     using GunchBot.LocationService.BingMaps;
-    using GunchBot.WeatherService.Stub;
+    using GunchBot.WeatherService.Nws;
     using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
     using Riff.Nws.Net;
