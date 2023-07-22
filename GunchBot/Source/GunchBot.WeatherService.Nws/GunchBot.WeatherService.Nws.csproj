@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\WeatherGovService\Source\Riff.Nws.Net\Riff.Nws.Net.csproj" />
+    <ProjectReference Include="..\GunchBot.Contracts\GunchBot.Contracts.csproj" />
+    <ProjectReference Include="..\GunchBot.Utilities\GunchBot.Utilities.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -31,5 +31,10 @@
 
             return $"It is currently fake°{unit} in {location} ({coordinates.Latitude}, {coordinates.Longitude}).";
         }
+
+        public string Forecast(string location, int days)
+        {
+            return "butts";
+        }
     }
 }

@@ -4,7 +4,7 @@
     using GunchBot.Contracts;
 
     /// <summary>
-    /// Handles interpretting weather-based commands.
+    /// Handles interpreting weather-based commands.
     /// </summary>
     public class WeatherModule : ModuleBase<SocketCommandContext>
     {
@@ -24,6 +24,13 @@
         {
             var location = string.Join(' ', parameters);
             await ReplyAsync(weatherApi.CurrentWeather(location, 'F'));
+        }
+
+        [Command("forecast")]
+        public async Task Forecast(params string[] parameters)
+        {
+            var location = string.Join(' ', parameters);
+            await ReplyAsync(weatherApi.Forecast(location, 3)); // TODO: un-hardcode the number of days.
         }
     }
 }

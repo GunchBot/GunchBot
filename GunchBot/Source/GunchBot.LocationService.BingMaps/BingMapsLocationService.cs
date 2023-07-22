@@ -29,8 +29,7 @@ namespace GunchBot.LocationService.BingMaps
                     Query = location,
                 };
 
-                var locationResource = GetResourcesFromRequest(geocodeRequest).FirstOrDefault() as Location;
-                if(locationResource != null)
+                if (GetResourcesFromRequest(geocodeRequest).FirstOrDefault() is Location locationResource)
                 {
                     return new Coordinates
                     {
@@ -39,10 +38,7 @@ namespace GunchBot.LocationService.BingMaps
                     };
                 }
             }
-
-            //TODO since technically 0,0 is a valid and real location,
-            //we need to make a coordinate class and have some coordinate.invalid value
-            //for the case where the lookup fails.
+            
             return Coordinates.Invalid;
         }
 

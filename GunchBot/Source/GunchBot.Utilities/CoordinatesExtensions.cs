@@ -14,7 +14,7 @@ namespace GunchBot.Utilities
         /// <returns>True if invalid, false otherwise.</returns>
         public static bool IsInvalid(this Coordinates coordinates)
         {
-            return coordinates.Latitude == null || coordinates.Longitude == null;
+            return double.IsNaN(coordinates.Latitude) || double.IsNaN(coordinates.Longitude);
         }
     }
 }

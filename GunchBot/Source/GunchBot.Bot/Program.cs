@@ -1,4 +1,6 @@
-﻿namespace GunchBot.Bot
+﻿using GunchBot.WeatherService.Nws;
+
+namespace GunchBot.Bot
 {
     using Discord;
     using Discord.Commands;
@@ -38,7 +40,7 @@
                 client = new DiscordSocketClient(config);
                 commands = new CommandService();
                 locationService = new BingMapsLocationService(bingMapsApiKey);
-                weatherApi = new StubWeatherApiIntegration(locationService);
+                weatherApi = new NwsWeatherService(locationService);
                 services = new ServiceCollection().AddSingleton(client).AddSingleton(commands).AddSingleton(weatherApi).BuildServiceProvider();
                 client.Log += ClientLog;
 
