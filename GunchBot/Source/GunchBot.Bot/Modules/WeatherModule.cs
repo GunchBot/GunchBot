@@ -6,6 +6,7 @@
     /// <summary>
     /// Handles interpreting weather-based commands.
     /// </summary>
+    [Obsolete("Not using traditional command services anymore. Use Slash Commands instead.")]
     public class WeatherModule : ModuleBase<SocketCommandContext>
     {
         private IWeatherService weatherApi;

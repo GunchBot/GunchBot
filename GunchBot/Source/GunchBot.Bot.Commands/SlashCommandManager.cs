@@ -8,7 +8,7 @@ namespace GunchBot.Bot.Commands
     /// <summary>
     /// Handles creating and running slash commands.
     /// </summary>
-    public class SlashCommandManager
+    public class SlashCommandManager : ISlashCommandManager
     {
         private readonly DiscordSocketClient client;
         private readonly IWeatherService weatherService;
@@ -21,22 +21,16 @@ namespace GunchBot.Bot.Commands
         /// <param name="weatherService">The weather service to use.</param>
         /// <remarks>
         /// Not a huge fan of this structure but for now it works.
-        /// TODO: Dependency Injection? Issue ID: GUN-17
-        /// TODO: Decouple this from DiscordSocketClient
+        /// TODO: Decouple this from DiscordSocketClient: GUN-19
         /// </remarks>
         public SlashCommandManager(DiscordSocketClient client, IWeatherService weatherService)
         {
             this.weatherService = weatherService ?? throw new ArgumentNullException(nameof(weatherService));
             this.client = client ?? throw new ArgumentNullException(nameof(client));
             this.commands = new List<ISlashCommandRunner>(); 
-
-            this.client.Ready += CreateCommands;
-            this.client.SlashCommandExecuted += HandleCommands;
         }
 
-        /// <summary>
-        /// Create and register commands.
-        /// </summary>
+        /// <inheritdoc/>
         public async Task CreateCommands()
         {
             commands.Add(new ForecastSlashCommandRunner(weatherService));
@@ -48,6 +42,7 @@ namespace GunchBot.Bot.Commands
                     // For a production bot, it is recommended to only run the CreateGlobalApplicationCommandAsync() once for each command.
                     // Probably need to look into guild commands and how to... do that.
                     await client.CreateGlobalApplicationCommandAsync(command.Build());
+                    // TODO: Also, this should be moved elsewhere to decouple this from the DiscordSocketClient as well. GUN-19
                 }
             }
             catch (HttpException exception)
@@ -57,15 +52,13 @@ namespace GunchBot.Bot.Commands
             }
         }
 
-        private async Task HandleCommands(SocketSlashCommand command)
+        /// <inheritdoc/>
+        public async Task HandleCommands(SocketSlashCommand command)
         {
-            if (command != null)
+            var commandRunner = commands.FirstOrDefault(c => c.CommandName == command.CommandName);
+            if (commandRunner != null)
             {
-                var commandRunner = commands.FirstOrDefault(c => c.CommandName == command.CommandName);
-                if (commandRunner != null)
-                {
-                    await commandRunner.RunCommand(command);
-                }
+                await commandRunner.RunCommand(command);
             }
         }
     }

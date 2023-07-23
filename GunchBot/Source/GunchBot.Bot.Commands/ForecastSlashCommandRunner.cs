@@ -29,8 +29,8 @@ namespace GunchBot.Bot.Commands
         /// <inheritdoc/>
         public ApplicationCommandProperties Build()
         {
-            return new SlashCommandBuilder().WithName(name)
-                .WithDescription(description)
+            return new SlashCommandBuilder().WithName(CommandName)
+                .WithDescription(CommandDescription)
                 .AddOption("location", ApplicationCommandOptionType.String, "The desired forecast location.", isRequired: true)
                 .AddOption("days", ApplicationCommandOptionType.Integer, "The desired number of days.", isRequired: false, minValue: 1, maxValue: 7)
                 .Build();
